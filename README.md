@@ -15,8 +15,8 @@ As a Dual Degree student in Automation & Robotics and Data Science, I’ve alway
 
 ✅ Create a scalable, community-impactful application
 
-##🧠 My Work
-**As a technically sound and solution-oriented developer, I:
+## 🧠 My Work
+As a technically sound and solution-oriented developer, I:
 
 Engineered a secure, scalable backend using Flask and SQLAlchemy 🧑‍💻
 
@@ -30,7 +30,7 @@ Enabled Excel-based report generation with OpenPyXL 📊
 
 Integrated Google Charts for real-time data visualization
 
-⚙️ Tech Stack
+## ⚙️ Tech Stack
 🔙 Backend
 Flask – Python web framework
 
@@ -42,14 +42,14 @@ Flask-Login & Werkzeug – Authentication & password hashing
 
 OpenPyXL – Excel export functionality
 
-🌐 Frontend
+## 🌐 Frontend
 HTML5 + Jinja2 – Structural layout & dynamic templates
 
 Bootstrap 5 – Responsive UI/UX
 
 Google Charts – Data visualizations
 
-📁 Features
+## 📁 Features
 👥 Role-based authentication for Users & Service Providers
 
 🗓️ Dashboard for bookings and earnings
@@ -66,7 +66,7 @@ Google Charts – Data visualizations
 
 📱 Mobile-optimized design
 
-📡 API Endpoints
+## 📡 API Endpoints
 Feature	URL Path	Method
 Home	/	GET, POST
 Login	/login	GET, POST
@@ -76,13 +76,13 @@ Dashboard	/dashboard	GET
 Search Services	/search	GET, POST
 Profile Management	/profile	GET, POST
 
-👨‍🎓 About Me
+## 👨‍🎓 About Me
 I'm Raj Mahajan, a passionate tech innovator with a strong foundation in Automation, Robotics, and Data Science. I love building solutions that blend real-world needs with cutting-edge technologies. My projects reflect my drive for innovation, clean design, and scalable architecture.
 
 📧 rajmahajan2151.rm@gmail.com
 🔗 LinkedIn
 
-🛠️ Future Enhancements
+## 🛠️ Future Enhancements
 ✅ Payment gateway integration
 
 ✅ Location-based service filtering
