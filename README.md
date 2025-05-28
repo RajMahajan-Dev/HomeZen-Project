@@ -4,7 +4,7 @@
 🔗 Live Demo: HomeZen App
 🎥 Project Video: Watch on YouTube
 
-📌 Why I Built This
+## 📌 Why I Built This
 As a Dual Degree student in Automation & Robotics and Data Science, I’ve always aimed to use my skills to develop tech that improves everyday life. HomeZen was built to:
 
 ✅ Simplify access to household services 🧹📚👶
@@ -15,8 +15,8 @@ As a Dual Degree student in Automation & Robotics and Data Science, I’ve alway
 
 ✅ Create a scalable, community-impactful application
 
-🧠 My Work
-As a technically sound and solution-oriented developer, I:
+##🧠 My Work
+**As a technically sound and solution-oriented developer, I:
 
 Engineered a secure, scalable backend using Flask and SQLAlchemy 🧑‍💻
 
