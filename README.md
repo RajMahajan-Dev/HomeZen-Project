@@ -1,4 +1,4 @@
-🏠 HomeZen – Household Services App
+# 🏠 HomeZen – Household Services App
 👋 Welcome to HomeZen – a smart and simple web application that connects users with household service providers like cleaners, tutors, and babysitters, all in one place.
 
 🔗 Live Demo: HomeZen App
