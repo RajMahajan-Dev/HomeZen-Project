@@ -1,0 +1,231 @@
+{% extends 'index1.html' %}
+{% block style %}
+<style>
+    .F {
+        color: blue;
+    }
+    .head {
+        height: 26vh;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    .sig {
+        padding: 0%;
+        margin-top: 1vw;
+        margin-left: 1vw;
+    }
+    .sig1 {
+        border: 3px solid rgb(250, 250, 250);
+        background-color: rgba(245, 197, 134, 0.396);
+        border-radius:10px;
+        margin: 1.5vw;
+        margin-bottom: 2vw;
+        box-shadow: 0px 10px 10px 0px rgb(150, 138, 138);
+    }
+    h1 {
+        margin: 0%;
+        margin-bottom: 1vh;
+        color: blueviolet;
+    }
+    h2 {
+        color: rgb(0, 0, 0);
+        font-size: 40px;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    #TO {
+        color: rgb(87, 87, 241);
+    }
+    #AO {
+        color: rgb(87, 241, 87);
+    }
+    #CO {
+        color: rgb(241, 87, 87);
+    }   
+    .flagged-row {
+        background-color: rgba(255, 0, 0, 0.1) !important; /* Light red with !important to override bootstrap */
+        border-left: 4px solid #dc3545; /* Red border on left */
+    }
+
+    .table-striped > tbody > tr.flagged-row:nth-of-type(odd) {
+        background-color: rgba(255, 0, 0, 0.15) !important; /* Slightly darker for striped effect */
+    }
+
+    .flagged-row td {
+        color: #dc3545; /* Red text */
+    }
+    .excel-btn {
+        position:relative;
+        top: 0;
+        left:  87vw;
+        z-index: 1000;
+    }
+
+    .excel-btn button {
+        padding: 10px 20px;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+{% block head %}
+    
+{% endblock %}
+{% block body1 %}
+<div class="col-2 head">
+    <div class="container col d-inline sig1">
+        <div class="row sig">
+            <div class="col-md-12">
+                <h1 class="lora" style="font-size:30px">Store Name</h1>
+                <h2 style="display: flex; justify-content: center;">
+                {% if proffessional.proffessional_company_name == "None" %}
+                    <h4 style="color: red; font-size: 15px;">*Please Complete your Profile</h4>
+                {% else %}
+                    {{proffessional.proffessional_company_name}}
+                {% endif %}
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="container col d-inline sig1">
+        <div class="row sig">
+            <div class="col-md-12">
+                <h1 class="lora" style="font-size:30px">Servise Type</h1>
+                <h2 style="display: flex; justify-content: center;">
+                {% if proffessional.proffessional_company_name == "None" %}
+                    <h4 style="color: red; font-size: 15px;">*Please Complete your Profile</h4>
+                {% else %}
+                    {{proffessional.proffessional_Service_type}}
+                {% endif %}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="excel-btn">
+    <form method="post" action="/dashboard">
+        <input type="hidden" name="form_type" value="Get_Excel">
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-file-excel"></i> Download Excel
+        </button>
+    </form>
+</div>
+<div class="container" style="margin: 3vh 7vw 6vh 7vw;">
+    <h3>Todays Orders</h3>
+    <div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th id="TO" scope="col">Order ID</th>
+                    <th id="TO" scope="col">Client Name</th>
+                    <th id="TO" scope="col">Order Name</th>
+                    <th id="TO" scope="col">Order Date</th>
+                    <th id="TO" scope="col">Order Status</th>
+                    <th id="TO" scope="col">Accept/Reject</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                {% if order.order_status =='Not Accepted' %}
+                <tr class="{{ 'flagged-row' if order.order_flaged else '' }}">
+                    <th scope="row">{{order.order_id}}</th>
+                    <td>{{order.user_name}}</td>
+                    <td>{{order.order_name}}</td>
+                    <td>{{order.order_date_created.strftime('%Y-%m-%d')}}</td>
+                    <td>{{order.order_status}}</td>
+                    <td>
+                        <div style="display: inline;">
+                            <form method="post" action="/dashboard" style="display: inline;">
+                                <fieldset {{'disabled' if proffessional.proffessional_available == False else '' }} style="display: inline;">
+                                    <input type="hidden" name="form_type" value="update_order_status">
+                                    <input type="hidden" name="order_id" value="{{order.order_id}}">
+                                    <input type="hidden" name="order_status" value="Accepted">
+                                    <button type="submit" class="btn btn-success">Accept</button>
+                                </fieldset>
+                            </form>
+                            <form method="post" action="/dashboard" style="display: inline;">
+                                <input type="hidden" name="form_type" value="update_order_status">
+                                <input type="hidden" name="order_id" value="{{order.order_id}}">
+                                <input type="hidden" name="order_status" value="Rejected">
+                                <button type="submit" class="btn btn-danger">Reject</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="container" style="margin: 3vh 7vw 6vh 7vw;">
+    <h3>Accepted Orders</h3>
+    <div>
+        <table class="table table-striped">
+            <thead>
+                <tr >
+                    <th id="AO" scope="col">Order ID</th>
+                    <th id="AO" scope="col">Client Name</th>
+                    <th id="AO" scope="col">Order Name</th>
+                    <th id="AO" scope="col">Order Date</th>
+                    <th id="AO" scope="col">Order Status</th>
+                    <th id="AO" scope="col">Accepted Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                {% if order.order_status =='Accepted' %}
+                <tr class="{{ 'flagged-row' if order.order_flaged else '' }}">
+                    <th scope="row">{{order.order_id}}</th>
+                    <td>{{order.user_name}}</td>
+                    <td>{{order.order_name}}</td>
+                    <td>{{order.order_date_created.strftime('%Y-%m-%d')}}</td>
+                    <td>{{order.order_status}}</td>
+                    <td>
+                        <form method="post" action="/dashboard">
+                            <input type="hidden" name="form_type" value="Completed">
+                            <input type="hidden" name="order_id" value="{{order.order_id}}">
+                            <button {{ 'disabled' if order.order_flaged else '' }} type="submit" class="btn btn-success">Completed</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container" style="margin: 3vh 7vw 6vh 7vw;">
+    <h3>Completed Orders</h3>
+    <div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th id="CO" scope="col">Order ID</th>
+                    <th id="CO" scope="col">Client Name</th>
+                    <th id="CO" scope="col">Order Name</th>
+                    <th id="CO" scope="col">Order Date</th>
+                    <th id="CO" scope="col">Rating</th>
+                    <th id="CO" scope="col">Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                {% if order.order_status =='Completed' %}
+                <tr class="{{ 'flagged-row' if order.order_flaged else '' }}">
+                    <th scope="row">{{order.order_id}}</th>
+                    <td>{{order.user_name}}</td>
+                    <td>{{order.order_name}}</td>
+                    <td>{{order.order_date_created.strftime('%Y-%m-%d')}}</td>
+                    <td>{{order.review_rating//1 if order.review_rating != None else 'Not Rated' }}</td>
+                    <td>{{order.review_comment}}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+

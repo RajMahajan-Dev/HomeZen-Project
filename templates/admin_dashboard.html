@@ -1,0 +1,668 @@
+{% extends 'index3.html' %}
+{% block style %}
+<style>
+    .F {
+        color: blue;
+    }
+    .table-container {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .table-section {
+        flex: 1;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .table-title {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #007bff;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .status-active {
+        color: green;
+        font-weight: bold;
+    }
+
+    .status-inactive {
+        color: red;
+        font-weight: bold;
+    }
+    .table-row {
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .table-row:hover {
+        background-color: #f5f5f5;
+    }
+    .detail-label {
+        font-weight: bold;
+        color: #666;
+        width: 150px;
+    }
+    .modal-body {
+        padding: 20px;
+    }
+    .detail-row {
+        margin-bottom: 15px;
+        display: flex;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    .profile-photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto;
+        border: 3px solid #fff;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}
+
+{% block body1 %}
+<div class="table-container">
+    <!-- Clients Table -->
+    <div class="table-section">
+        <h2 class="table-title">Clients</h2>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Location</th>
+                        <th>Total Spend</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                        <div>
+                            <tr>                                    
+                                <td><button type="button" style="margin: 0%; padding: 0%; color: blue;" class="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop_client{{client.client_id}}">#{{ client.client_id }}</button></td>
+                                <td>{{ client.user.user_name }}</td>
+                                <td>{{ client.client_email }}</td>
+                                <td>{{ client.client_location }}</td>
+                                <td>₹{{ client.client_total_spend//1 }}</td>
+                                <td>
+                                    {% if client.client_flaged %}
+                                    <span class="status-inactive">Flagged</span>
+                                    {% else %}
+                                    <span class="status-active">Active</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </div>
+
+                      <div class="modal fade" id="staticBackdrop_client{{client.client_id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="staticBackdropLabel">Client Data</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="detail-row">
+                                    <img src="{{client.client_photo}}" alt="Profile Photo" class="profile-photo mb-3">
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Client ID:</span>
+                                    <span>#{{ client.client_id }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Name:</span>
+                                    <span>{{ client.user.user_name }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Bio:</span>
+                                    <span>{{ client.client_bio }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Email:</span>
+                                    <span>{{ client.client_email }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Location:</span>
+                                    <span>{{ client.client_location }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">PinCode:</span>
+                                    <span>{{ client.client_pincode }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Date Created:</span>
+                                    <span>{{ client.client_date_created.strftime('%Y-%m-%d') }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Total Spend:</span>
+                                    <span>₹{{ client.client_total_spend//1 }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Account Status:</span>
+                                    <span class="{{ 'status-inactive' if client.client_flaged else 'status-active' }}">
+                                        {{ 'Flagged' if client.client_flaged else 'Active' }}
+                                    </span>
+                                </div>
+                                <div class="flag-section mb-4">
+                                    <h5 class="border-bottom pb-2 mb-3">Account Status</h5>
+                                    <form method="post" action="/dashboard">
+                                        <input type="hidden" name="form_type" value="flag_client">
+                                        <input type="hidden" name="client_id" value="{{ client.client_id }}">
+                                        <div class="form-check form-switch">
+                                            {% if client.client_flaged %}
+                                                <input class="form-check-input" type="checkbox" role="switch" 
+                                                id="flagSwitch_{{client.client_id}}" name="flag_status" value='False'
+                                                {% if client.client_flaged %}checked{% endif %}>
+                                            {% else %}
+                                                <input class="form-check-input" type="checkbox" role="switch" 
+                                                id="flagSwitch_{{client.client_id}}" name="flag_status" value='True'
+                                                {% if client.client_flaged %}checked{% endif %}>
+                                            {% endif %}
+                                            <label class="form-check-label" for="flagSwitch_{{client.client_id}}">
+                                                Flag Account
+                                            </label>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning btn-sm mt-2">Update Status</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <form method="post" action="/dashboard">
+                                <input type="hidden" name="form_type" value="delete_client">
+                                <input type="hidden" name="client_id" value="{{ client.client_id }}">
+                                <button type="submit" class="btn btn-danger">Delete Client</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Professionals Table -->
+    <div class="table-section">
+        <h2 class="table-title">Professionals</h2>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Service Type</th>
+                        <th>Rating</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prof in proffessionals %}
+                    <tr>
+                        <td><button type="button" style="margin: 0%; padding: 0%; color: blue;" class="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop_proff{{prof.proffessional_id }}">#{{ prof.proffessional_id }}</button></td>
+                        <td>{{ prof.user.user_name }}</td>
+                        <td>{{ prof.proffessional_company_name }}</td>
+                        <td>{{ prof.proffessional_Service_type }}</td>
+                        <td>{{ prof.proffessional_rating }}/5</td>
+                        <td>
+                            {% if prof.proffessional_flaged %}
+                            <span class="status-inactive">Flagged</span>
+                            {% else %}
+                            <span class="status-active">Active</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    <div class="modal fade" id="staticBackdrop_proff{{prof.proffessional_id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="staticBackdropLabel">Proffessional Data</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="detail-row">
+                                    <img src="{{prof.proffessional_photo}}" alt="Profile Photo" class="profile-photo mb-3">
+                                </div>
+                                
+                                <div class="detail-row">
+                                    <span class="detail-label">Professional ID:</span>
+                                    <span>#{{ prof.proffessional_id }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Name:</span>
+                                    <span>{{ prof.user.user_name }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Company:</span>
+                                    <span>{{ prof.proffessional_company_name }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Email:</span>
+                                    <span>{{ prof.proffessional_email }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Description:</span>
+                                    <span>&ThickSpace; {{ prof.proffessional_description }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Service Type:</span>
+                                    <span>{{ prof.proffessional_Service_type }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Year Of Experience:</span>
+                                    <span>{{ prof.proffessional_years_of_experience//1 }} Years</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Rating:</span>
+                                    <span>{{ prof.proffessional_rating//1 }}/5</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Location</span>
+                                    <span>{{ prof.proffessional_location }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">PinCode:</span>
+                                    <span>{{ prof.proffessional_pincode }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Date Created:</span>
+                                    <span>{{ prof.proffessional_date_created.strftime('%Y-%m-%d') }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Account Status:</span>
+                                    <span class="{{ 'status-inactive' if prof.proffessional_flaged else 'status-active' }}">
+                                        {{ 'Flagged' if prof.proffessional_flaged else 'Active' }}
+                                    </span>
+                                </div>
+                                
+
+                                <div class="flag-section mb-4">
+                                    <h5 class="border-bottom pb-2 mb-3">Account Status</h5>
+                                    <form method="post" action="/dashboard">
+                                        <input type="hidden" name="form_type" value="flag_proffessional">
+                                        <input type="hidden" name="proffessional_id" value="{{ prof.proffessional_id }}">
+                                        <div class="form-check form-switch">
+                                            {% if prof.proffessional_flaged %}
+                                                <input class="form-check-input" type="checkbox" role="switch" 
+                                                id="flagSwitch_{{prof.proffessional_id}}" name="flag_status" value='False'
+                                                {% if prof.proffessional_flaged %}checked{% endif %}>
+                                            {% else %}
+                                                <input class="form-check-input" type="checkbox" role="switch" 
+                                                id="flagSwitch_{{prof.proffessional_id}}" name="flag_status" value='True'
+                                                {% if prof.proffessional_flaged %}checked{% endif %}>
+                                            {% endif %}
+                                            <label class="form-check-label" for="flagSwitch_{{prof.proffessional_id}}">
+                                                Flag Account
+                                            </label>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning btn-sm mt-2">Update Status</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <form method="post" action="/dashboard">
+                                <input type="hidden" name="form_type" value="delete_proffessional">
+                                <input type="hidden" name="proffessional_id" value="{{ prof.proffessional_id }}">
+                                <button type="submit" class="btn btn-danger">Delete Proffessional</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="table-container">
+    <!-- Services Table -->
+    <div class="table-section">
+        <h2 class="table-title">Services</h2>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Service Provider</th>
+                        <th>Price</th>
+                        <th>Date Created</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                        <div>
+                            <tr>                                    
+                                <td><button type="button" style="margin: 0%; padding: 0%; color: blue;" class="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop_service{{service.service_id}}">#{{ service.service_id }}</button></td>
+                                <td>{{ service.service_name }}</td>
+                                <td>{{ service.service_description }}</td>
+                                <td>{{ service.proffessional_company_name }}</td>
+                                <td>₹{{ service.service_price//1 }}</td>
+                                <td>{{ service.service_date_created.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    {% if service.service_flaged %}
+                                    <span class="status-inactive">Flagged</span>
+                                    {% else %}
+                                    <span class="status-active">Active</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </div>
+
+                      <div class="modal fade" id="staticBackdrop_service{{service.service_id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="staticBackdropLabel">Service Data</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="detail-row">
+                                    <img src="{{service.service_photo}}" alt="Profile Photo" class="profile-photo mb-3">
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Service ID:</span>
+                                    <span>#{{ service.service_id }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Name:</span>
+                                    <span>{{ service.service_name }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Description:</span>
+                                    <span>{{ service.service_description }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Service Provider:</span>
+                                    <span>{{ service.proffessional_company_name }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Price:</span>
+                                    <span>₹{{ service.service_price//1 }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Date Created:</span>
+                                    <span>{{ service.service_date_created.strftime('%Y-%m-%d') }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Account Status:</span>
+                                    <span class="{{ 'status-inactive' if service.service_flaged else 'status-active' }}">
+                                        {{ 'Flagged' if service.service_flaged else 'Active' }}
+                                    </span>
+                                </div>
+                                <div class="flag-section mb-4">
+                                    <h5 class="border-bottom pb-2 mb-3">Account Status</h5>
+                                    <form method="post" action="/dashboard">
+                                        <input type="hidden" name="form_type" value="flag_service">
+                                        <input type="hidden" name="service_id" value="{{ service.service_id }}">
+                                        <div class="form-check form-switch">
+                                            {% if service.service_flaged %}
+                                                <input class="form-check-input" type="checkbox" role="switch" 
+                                                id="flagSwitch_{{service.service_id}}" name="flag_status" value='False'
+                                                {% if service.service_flaged %}checked{% endif %}>
+                                            {% else %}
+                                                <input class="form-check-input" type="checkbox" role="switch" 
+                                                id="flagSwitch_{{service.service_id}}" name="flag_status" value='True'
+                                                {% if service.service_flaged %}checked{% endif %}>
+                                            {% endif %}
+                                            <label class="form-check-label" for="flagSwitch_{{service.service_id}}">
+                                                Flag Account
+                                            </label>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning btn-sm mt-2">Update Status</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <form method="post" action="/dashboard">
+                                <input type="hidden" name="form_type" value="delete_service">
+                                <input type="hidden" name="service_id" value="{{ service.service_id }}">
+                                <button type="submit" class="btn btn-danger">Delete service</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Review Table -->
+    <div class="table-section">
+        <h2 class="table-title">Review</h2>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Client Name</th>
+                        <th>Service Name</th>
+                        <th>Provider</th>
+                        <th>Rating</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in reviews %}
+                    <tr>
+                        <td><button type="button" style="margin: 0%; padding: 0%; color: blue;" class="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop_reviewf{{review.review_id }}">#{{ review.review_id }}</button></td>
+                        <td>{{ review.user_name }}</td>
+                        <td>{{ review.order_name }}</td>
+                        <td>{{ review.proffessional_company_name }}</td>
+                        <td>{{ review.review_rating//1 }}/5</td>
+                        <td>{{ review.review_comment }}</td>
+                    </tr>
+
+                    <div class="modal fade" id="staticBackdrop_reviewf{{review.review_id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="staticBackdropLabel">Review Data</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="detail-row">
+                                    <span class="detail-label">ID:</span>
+                                    <span>#{{ review.review_id }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Client Name:</span>
+                                    <span>{{ review.user_name }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Service Name:</span>
+                                    <span>{{ review.order_name }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Provider:</span>
+                                    <span>{{ review.proffessional_company_name }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Rating:</span>
+                                    <span>{{ review.review_rating//1 }}/5</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Comment:</span>
+                                    <span>{{ review.review_comment }}</span>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <form method="post" action="/dashboard">
+                                <input type="hidden" name="form_type" value="delete_review">
+                                <input type="hidden" name="review_id" value="{{ review.review_id }}">
+                                <button type="submit" class="btn btn-danger">Delete review</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="table-container">
+    <!-- Orders Table -->
+<div class="table-section">
+    <h2 class="table-title">Orders</h2>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Client Name</th>
+                    <th>Provider</th>
+                    <th>Order Status</th>
+                    <th>Order Amount</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td><button type="button" style="margin: 0%; padding: 0%; color: blue;" class="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop_orderf{{order.order_id }}">#{{ order.order_id }}</button></td>
+                    <td>{{ order.order_name }}</td>
+                    <td>{{ order.user_name }}</td>
+                    <td>{{ order.proffessional_company_name }}</td>
+                    <td>{{ order.order_status }}</td>
+                    <td>₹{{ order.order_payment_amount//1 }}</td>
+                    <td>{{ order.review_rating//1 if order.review_rating else 'No Rating' }}</td>
+                    <td>{{ order.review_comment if order.review_comment else 'No Comment'}}</td>
+                    <td>
+                        {% if order.order_flaged %}
+                        <span class="status-inactive">Flagged</span>
+                        {% else %}
+                        <span class="status-active">Active</span>
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <div class="modal fade" id="staticBackdrop_orderf{{order.order_id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="staticBackdropLabel">Order Data</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="detail-row">
+                                <span class="detail-label">Client ID:</span>
+                                <span>#{{ order.order_id }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Name:</span>
+                                <span>{{ order.order_name }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Client Name:</span>
+                                <span>{{ order.user_name }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Provider:</span>
+                                <span>{{ order.proffessional_company_name }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Order Status:</span>
+                                <span>{{ order.order_status }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Payment Amount:</span>
+                                <span>{{ order.order_payment_amount//1 }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Rating:</span>
+                                <span>{{ order.review_rating//1 if order.review_rating else None }}/5</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Comment:</span>
+                                <span>{{ order.review_comment }}</span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Account Status:</span>
+                                <span class="{{ 'status-inactive' if order.order_flaged else 'status-active' }}">
+                                    {{ 'Flagged' if order.order_flaged else 'Active' }}
+                                </span>
+                            </div>
+                            <div class="flag-section mb-4">
+                                <h5 class="border-bottom pb-2 mb-3">Account Status</h5>
+                                <form method="post" action="/dashboard">
+                                    <input type="hidden" name="form_type" value="flag_order">
+                                    <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                                    <div class="form-check form-switch">
+                                        {% if order.order_flaged %}
+                                            <input class="form-check-input" type="checkbox" role="switch" 
+                                            id="flagSwitch_{{order.order_id}}" name="flag_status" value='False'
+                                            {% if order.order_flaged %}checked{% endif %}>
+                                        {% else %}
+                                            <input class="form-check-input" type="checkbox" role="switch" 
+                                            id="flagSwitch_{{order.order_id}}" name="flag_status" value='True'
+                                            {% if order.order_flaged %}checked{% endif %}>
+                                        {% endif %}
+                                        <label class="form-check-label" for="flagSwitch_{{order.order_id}}">
+                                            Flag Account
+                                        </label>
+                                    </div>
+                                    <button type="submit" class="btn btn-warning btn-sm mt-2">Update Status</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <form method="post" action="/dashboard">
+                            <input type="hidden" name="form_type" value="delete_order">
+                            <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                            <button type="submit" class="btn btn-danger">Delete order</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+{% endblock %}

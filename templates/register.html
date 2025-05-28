@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sofia&display=swap" rel="stylesheet">
+
+    <style>
+        html,body {
+            scroll-behavior: smooth;
+            background-color: aquamarine;
+            overflow: hidden;
+        }
+        img {
+            object-fit: cover;
+        }
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            -webkit-text-stroke: 0.5px black;
+            color: transparent;
+            padding-top: 0%;
+            padding-bottom: 0%;
+            margin: 0% 1.5% 0% 1%;
+        }
+        .rainbow-text {
+            display: inline-block;
+            animation: rainbow 3s infinite;
+        }
+        .nav-link {
+            margin: 0%;
+            padding-bottom: 1px;
+        }
+        .nav-item {
+            margin: 0% 2% 0% 2%;
+        }
+        @keyframes rainbow {
+            0% { color: red; }
+            14% { color: orange; }
+            28% { color: yellow; }
+            42% { color: green; }
+            57% { color: blue; }
+            71% { color: indigo; }
+            85% { color: violet; }
+            100% { color: red; }
+        }
+
+
+        .Details {
+            position: absolute;
+            right: 10%;
+            top: 14%;
+            background-color: rgba(255, 255, 255, 0.523);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 2vw;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(21, 29, 135, 0.714);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            width: 400px;
+
+        }
+        .form-control {
+          background-color: rgba(133, 108, 235, 0.251);
+        }
+
+        .scroll-container {
+            position: absolute;
+            left: 25%;
+            top: 53.5px;
+            height: 100vh;
+            width: 20%;
+            overflow: hidden;
+        }
+
+        .scroll-container1 {
+            position: absolute;
+            left: 2%;
+            top: 53.5px;
+            height: 100vh;
+            width: 20%;
+            overflow: hidden;
+        }
+
+        .scroll-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: autoScroll 60s linear infinite;
+        }
+
+        .scroll-cards1 {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: autoScroll1 60s linear infinite;
+        }
+
+        .scroll-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .scroll-card:hover {
+        transform: scale(1.02);
+        background: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes autoScroll {
+            0% { transform: translateY(-99%); }
+            100% { transform: translateY(0%); }
+        }
+
+        @keyframes autoScroll1 {
+            0% { transform: translateY(27%); }
+            100% { transform: translateY(-100%); }
+        }
+
+        .scroll-cards:hover {
+            animation-play-state: running;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 50px;
+            right: 0px;
+            z-index: 1060;
+        }
+
+        .toast {
+            opacity: 1 !important;
+        }
+
+    </style>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#"><span class="rainbow-text">HomeZen</span></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" style="font-weight: 600; font-size: 18px; font-family: Georgia;" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" style="font-weight: 600; font-size: 16px; position: relative; top: 2px; width: 150px; font-family: Georgia;" href="/our_growth">Our-Growth</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" style=" position: absolute; right: 2.5%;font-weight: bold; font-family:cursive; font-size: 18px; padding-top: 8px;" href="/login">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" style="color: blue; position: absolute; right: 8%; text-decoration-line: underline; text-decoration-style: wavy; font-family: Georgia;" href="/register">Register</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+</head>
+
+<body>
+
+<div class="toast-container position-fixed p-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category,message in messages %}
+                <div class="toast align-items-center text-white bg-{{ category }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+
+<div class="scroll-container">
+  <div class="scroll-cards">
+      <div class="scroll-card" style="width: 18rem;">
+          <img src="..\static\Salon.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Home Salon</h5>
+            <p class="card-text">Get beauty and grooming services at home by experienced professionals, including facials, haircuts, and spa treatments, tailored to your convenience.</p>
+          </div>
+        </div>
+
+        <div class="scroll-card" style="width: 18rem;">
+          <img src="..\static\Cook.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Cooking</h5>
+            <p class="card-text">Hire expert chefs to cook personalized, nutritious, and delicious meals in your kitchen, catering to your specific dietary preferences.</p>
+          </div>
+        </div>
+
+        <div class="scroll-card" style="width: 18rem;">
+          <img src="..\static\Clean.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Cleaning</h5>
+            <p class="card-text">Comprehensive cleaning solutions for your home, covering dusting, mopping, and sanitization, ensuring a spotless and healthy living space.</p>
+          </div>
+      </div>
+
+      <div class="scroll-card" style="width: 18rem;">
+          <img src="..\static\security.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Home Security</h5>
+            <p class="card-text">State-of-the-art home security systems, including CCTV installation, alarm setup, and monitoring services, to keep your family safe.</p>
+          </div>
+        </div>
+
+        <div class="scroll-card" style="width: 18rem;">
+          <img src="..\static\garden.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Gardening</h5>
+            <p class="card-text">Professional gardening services to maintain and beautify your plants, including planting, trimming, and landscaping for a vibrant green space.</p>
+          </div>
+        </div>
+
+        <div class="scroll-card" style="width: 18rem;">
+          <img src="..\static\laundry.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Home Laundry</h5>
+            <p class="card-text">Convenient and affordable laundry services, including washing, ironing, and dry cleaning, delivered right to your doorstep.</p>
+          </div>
+        </div>
+
+        <div class="scroll-card" style="width: 18rem;">
+          <img src="..\static\tutor.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Home Tutor</h5>
+            <p class="card-text">Quality tutoring services at home for all subjects and grades, focusing on personalized attention and academic excellence.</p>
+          </div>
+        </div>
+
+        <div class="scroll-card" style="width: 18rem;">
+          <img src="..\static\repair.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Home Repair</h5>
+            <p class="card-text">Reliable repair services for plumbing, electrical issues, furniture, and more, handled by skilled technicians for quick and hassle-free solutions.</p>
+          </div>
+        </div>
+
+        <div class="scroll-card" style="width: 18rem;">
+          <img src="..\static\automation.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Hoeme Automation</h5>
+            <p class="card-text">Transform your house with smart automation systems, integrating lighting, appliances, and security controls for a futuristic living experience.</p>
+          </div>
+        </div>
+  </div>
+</div>
+<div class="scroll-container1">
+  <div class="scroll-cards1">
+
+    <div class="scroll-card" style="width: 18rem;">
+      <img src="..\static\Salon.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Home Salon</h5>
+        <p class="card-text">Get beauty and grooming services at home by experienced professionals, including facials, haircuts, and spa treatments, tailored to your convenience.</p>
+      </div>
+    </div>
+
+    <div class="scroll-card" style="width: 18rem;">
+      <img src="..\static\Cook.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Cooking</h5>
+        <p class="card-text">Hire expert chefs to cook personalized, nutritious, and delicious meals in your kitchen, catering to your specific dietary preferences.</p>
+      </div>
+    </div>
+
+    <div class="scroll-card" style="width: 18rem;">
+      <img src="..\static\Clean.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Cleaning</h5>
+        <p class="card-text">Comprehensive cleaning solutions for your home, covering dusting, mopping, and sanitization, ensuring a spotless and healthy living space.</p>
+      </div>
+  </div>
+
+  <div class="scroll-card" style="width: 18rem;">
+      <img src="..\static\security.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Home Security</h5>
+        <p class="card-text">State-of-the-art home security systems, including CCTV installation, alarm setup, and monitoring services, to keep your family safe.</p>
+      </div>
+    </div>
+
+    <div class="scroll-card" style="width: 18rem;">
+      <img src="..\static\garden.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Gardening</h5>
+        <p class="card-text">Professional gardening services to maintain and beautify your plants, including planting, trimming, and landscaping for a vibrant green space.</p>
+      </div>
+    </div>
+
+    <div class="scroll-card" style="width: 18rem;">
+      <img src="..\static\laundry.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Home Laundry</h5>
+        <p class="card-text">Convenient and affordable laundry services, including washing, ironing, and dry cleaning, delivered right to your doorstep.</p>
+      </div>
+    </div>
+
+    <div class="scroll-card" style="width: 18rem;">
+      <img src="..\static\tutor.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Home Tutor</h5>
+        <p class="card-text">Quality tutoring services at home for all subjects and grades, focusing on personalized attention and academic excellence.</p>
+      </div>
+    </div>
+
+    <div class="scroll-card" style="width: 18rem;">
+      <img src="..\static\repair.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Home Repair</h5>
+        <p class="card-text">Reliable repair services for plumbing, electrical issues, furniture, and more, handled by skilled technicians for quick and hassle-free solutions.</p>
+      </div>
+    </div>
+
+    <div class="scroll-card" style="width: 18rem;">
+      <img src="..\static\automation.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Home Automation</h5>
+        <p class="card-text">Transform your house with smart automation systems, integrating lighting, appliances, and security controls for a futuristic living experience.</p>
+      </div>
+    </div>
+  </div>
+</div>
+  <img src="/static/homebg.jpg" alt="Home Background" style="width: 100%; height: 100%; position: absolute; z-index: -1;">
+  <div style="display: inline-block;" class="Details">
+    <form method="post" action="/register">
+      <div class="mb-3">
+        <label for="user_handle" class="form-label">@UserName</label>
+        <input type="text" name="user_handle" class="form-control" id="user_handle" required>
+        <div class="form-text">Create Unique UserName. Just For You</div>
+      </div>
+      <div class="mb-3">
+        <label for="user_name" class="form-label">Your Good Name</label>
+        <input type="text" name="user_name" class="form-control" id="user_name" required>
+      </div>
+      <div class="mb-3">
+        <label for="user_email" class="form-label">Email address</label>
+        <input type="email" name="user_email" class="form-control" id="user_email" aria-describedby="emailHelp" required>
+        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+      </div>
+      <div class="mb-3">
+        <label for="user_password" class="form-label">Password</label>
+        <input type="password" name="user_password" class="form-control" id="user_password" minlength="6" maxlength="12" required>
+      </div>
+      <p class="mb-1" style="padding: 0%;">
+        <label for="user_role" class="form-label">Choose your Role</label>
+        <div style="display: inline; position: relative; left: 10px;">
+            <input type="radio" class="btn-check" name="user_role" id="role1" value="1" autocomplete="off" unchecked>
+            <label class="btn" for="role1">Customer</label>
+        </div>
+        <div style="display: inline; position: relative; left: 30px;">
+            <input type="radio" class="btn-check" name="user_role" id="role2" value="2" autocomplete="off" unchecked>
+            <label class="btn" for="role2">Proffessional</label>
+        </div>
+      </p>
+      <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var toastElList = document.querySelectorAll('.toast');
+        var toastList = [...toastElList].map(function(toastEl) {
+            return new bootstrap.Toast(toastEl, {
+                animation: true,
+                autohide: false
+            });
+        });
+        toastList.forEach(toast => toast.show());
+    });
+  </script>
+
+</body>

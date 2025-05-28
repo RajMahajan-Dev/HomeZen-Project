@@ -1,0 +1,229 @@
+{% extends 'index3.html' %}
+{% block head %}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sofia&display=swap" rel="stylesheet">
+    <style>
+        html,body {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        .T {
+            color: blue;
+        }
+        img {
+            object-fit: cover;
+        }
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            -webkit-text-stroke: 0.5px black;
+            color: transparent;
+            padding-top: 0%;
+            padding-bottom: 0%;
+            margin: 0% 1.5% 0% 1%;
+        }
+        .rainbow-text {
+            display: inline-block;
+            animation: rainbow 3s infinite;
+        }
+        .nav-link {
+            margin: 0%;
+            padding-bottom: 1px;
+        }
+        .nav-item {
+            margin: 0% 2% 0% 2%;
+        }
+        @keyframes rainbow {
+            0% { color: red; }
+            14% { color: orange; }
+            28% { color: yellow; }
+            42% { color: green; }
+            57% { color: blue; }
+            71% { color: indigo; }
+            85% { color: violet; }
+            100% { color: red; }
+        }
+        div{
+            display: inline-block;
+        }
+    </style>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+
+    var data = google.visualization.arrayToDataTable({{ js_data|tojson }});
+
+    var options = {
+      title: 'All Services'
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+    chart.draw(data, options);
+    }
+</script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+google.charts.load("current", { packages: ["corechart", "bar"] })
+google.charts.setOnLoadCallback(drawbar)
+
+function drawbar() {
+var data = new google.visualization.arrayToDataTable({{ js_data6|tojson|safe }});
+
+      var options = {
+        title: 'HomeZen Strength',
+        width: 743,
+        height: 500,
+        legend: { position: 'top', maxLines: 3 },
+        bar: { groupWidth: '75%' },
+        isStacked: true,
+      };
+
+var chart = new google.visualization.ColumnChart(
+  document.getElementById("chart_bar"),
+)
+chart.draw(data, options)
+}
+</script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load("current", {packages:["corechart"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable({{ js_data7|tojson }});
+    var options = {
+      title: 'Proffesionals And Clients',
+      pieHole: 0.4,
+    };
+    var chart = new google.visualization.PieChart(document.getElementById('donutchart7'));
+    chart.draw(data, options);
+  }
+</script>
+
+<script type="text/javascript">
+  google.charts.load("current", {packages:["corechart"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable({{ js_data10|tojson }});
+    var options = {
+      title: 'Reviews',
+      pieHole: 0.4,
+    };
+    var chart = new google.visualization.PieChart(document.getElementById('donutchart10'));
+    chart.draw(data, options);
+  }
+</script>
+
+<script type="text/javascript">
+  google.charts.load("current", {packages:["corechart"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable({{ js_data8|tojson }});
+    var options = {
+      title: 'Services',
+      pieHole: 0.4,
+    };
+    var chart = new google.visualization.PieChart(document.getElementById('donutchart8'));
+    chart.draw(data, options);
+  }
+</script>
+
+<script type="text/javascript">
+  google.charts.load("current", {packages:["corechart"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable({{ js_data9|tojson }});
+    var options = {
+      title: 'Orders ',
+      pieHole: 0.4,
+    };
+    var chart = new google.visualization.PieChart(document.getElementById('donutchart9'));
+    chart.draw(data, options);
+  }
+</script>
+
+</script>
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['bar']});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable({{ js_data2|tojson }});
+    var options = {
+      chart: {
+        title: 'HomeZen Porformance',
+        subtitle: 'Accepted, Rejected, and Completed: Live data',
+      }
+    };
+    var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+    chart.draw(data, google.charts.Bar.convertOptions(options));
+  }
+</script>
+
+{% endblock %}
+{% block body1 %}
+
+
+<script>
+google.charts.load("current", { packages: ["corechart", "bar"] })
+google.charts.setOnLoadCallback(drawTrendlines);
+
+function drawTrendlines() {
+
+    var data = new google.visualization.DataTable();
+    var rawData = {{ js_data5|tojson|safe }};
+
+    data.addColumn('string', 'Service Type');
+    data.addColumn('number', 'Orders');
+    data.addColumn('number', 'Review');
+
+    rawData.slice(1).forEach(function(row) {
+        data.addRow([
+            row[0],  // Service Type
+            row[1],  // Orders
+            row[2]   // Reviews
+        ]);
+    });
+    
+    var options = {
+        title: 'Orders based on Service Type',
+        trendlines: {
+            0: { type: 'linear', lineWidth: 5, opacity: 0.3 },
+            1: { type: 'exponential', lineWidth: 10, opacity: 0.3 },
+        },
+        hAxis: {
+            title: 'Service Type',
+            viewWindow: {
+                min: [1, 30, 0],
+                max: [30, 30, 0],
+            },
+        },
+        vAxis: {
+            title: 'Count',
+        }
+    };
+
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+</script>
+<div style="display: inline;">
+    <div id="chart_div" style="height:600px; width: 100%;"></div>
+    <div id="chart_bar" style="height:300px; width: 49%;"></div>
+    <div id="piechart" style= "width: 49%; height: 500px;"></div>
+    <div id="columnchart_material" style="width: 49%; height: 500px; display: inline-block;"></div>
+    <div id="donutchart7" style="width: 49%; height: 500px;"></div>
+    <div id="donutchart8" style="width: 49%; height: 500px;"></div>
+    <div id="donutchart9" style="width: 49%; height: 500px;"></div>
+    <div id="donutchart10" style="width: 49%; height: 500px;"></div>
+
+</div>
+    
+{% endblock %}

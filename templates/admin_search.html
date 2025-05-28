@@ -1,0 +1,313 @@
+{% extends 'index3.html' %}
+{% block head %}
+    <style>
+        .S {
+            color: blue;
+        }
+        .search-container {
+            position: fixed;
+            top: 150px;
+            right: 30vw;
+            z-index: 1000;
+            background: white;
+            width:500px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .search-param-btn {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .search-param-btn::after {
+            float: right;
+            margin-top: 8px;
+        }
+        .hower {
+            transform-origin: center;
+            transform: scale(1);
+            transition: all 0.9s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .hower:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .table-container {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .table-section {
+        flex: 1;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .table-title {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #007bff;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .status-active {
+        color: green;
+        font-weight: bold;
+    }
+
+    .status-inactive {
+        color: red;
+        font-weight: bold;
+    }
+    .table-row {
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .table-row:hover {
+        background-color: #f5f5f5;
+    }
+    .detail-label {
+        font-weight: bold;
+        color: #666;
+        width: 150px;
+    }
+    .modal-body {
+        padding: 20px;
+    }
+    .detail-row {
+        margin-bottom: 15px;
+        display: flex;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    .profile-photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto;
+        border: 3px solid #fff;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    .flagged-row {
+        background-color: rgba(255, 0, 0, 0.1) !important; /* Light red with !important to override bootstrap */
+        border-left: 4px solid #dc3545; /* Red border on left */
+    }
+
+    .table-striped > tbody > tr.flagged-row:nth-of-type(odd) {
+        background-color: rgba(255, 0, 0, 0.15) !important; /* Slightly darker for striped effect */
+    }
+
+    .flagged-row td {
+        color: #dc3545; /* Red text */
+    }
+    
+    </style>
+{% endblock %}
+{% block body1 %}
+<div class="search-container">
+    <form method="post" action="/search">
+        <div class="input-group mb-0">
+            <input type="text" class="form-control" id="searchInput" name="search_query" placeholder="Enter company name..." required>
+            <input type="hidden" id="searchTypeInput" name="search_type" value="proffessional_company_name">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span id="searchType">By Company Name</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#" onclick="changeSearchType('proffessional_company_name', 'By Company Name')">By Company Name</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeSearchType('location', 'By Location')">By Location</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeSearchType('pincode', 'By Pin Code')">By Pin Code</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeSearchType('service_type', 'By Service type')">By Service type</a></li>
+
+            </ul>
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="table-container" style="margin-top:25vh;">
+    <!-- Table -->
+    <div class="table-section">
+        <h2 class="table-title">Result</h2>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Service Type</th>
+                        <th>Rating</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prof in proffessionals %}
+                    <tr class="{{ 'flagged-row' if prof.proffessional_flaged else '' }}">
+                        <td><button type="button" style="margin: 0%; padding: 0%; color: blue;" class="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop_proff{{prof.proffessional_id }}">#{{ prof.proffessional_id }}</button></td>
+                        <td>{{ prof.user.user_name }}</td>
+                        <td>{{ prof.proffessional_company_name }}</td>
+                        <td>{{ prof.proffessional_Service_type }}</td>
+                        <td>{{ prof.proffessional_rating }}/5</td>
+                        <td>
+                            {% if prof.proffessional_flaged %}
+                            <span class="status-inactive">Flagged</span>
+                            {% else %}
+                            <span class="status-active">Active</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    <div class="modal fade" id="staticBackdrop_proff{{prof.proffessional_id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="staticBackdropLabel">Proffessional Data</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="detail-row">
+                                    <img src="{{prof.proffessional_photo}}" alt="Profile Photo" class="profile-photo mb-3">
+                                </div>
+                                
+                                <div class="detail-row">
+                                    <span class="detail-label">Professional ID:</span>
+                                    <span>#{{ prof.proffessional_id }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Name:</span>
+                                    <span>{{ prof.user.user_name }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Company:</span>
+                                    <span>{{ prof.proffessional_company_name }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Email:</span>
+                                    <span>{{ prof.proffessional_email }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Description:</span>
+                                    <span>{{ prof.proffessional_description }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Service Type:</span>
+                                    <span>{{ prof.proffessional_Service_type }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Year Of Experience:</span>
+                                    <span>{{ prof.proffessional_years_of_experience//1 }} Years</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Rating:</span>
+                                    <span>{{ prof.proffessional_rating//1 }}/5</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Location</span>
+                                    <span>{{ prof.proffessional_location }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">PinCode:</span>
+                                    <span>{{ prof.proffessional_pincode }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Date Created:</span>
+                                    <span>{{ prof.proffessional_date_created.strftime('%Y-%m-%d') }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Account Status:</span>
+                                    <span class="{{ 'status-inactive' if prof.proffessional_flaged else 'status-active' }}">
+                                        {{ 'Flagged' if prof.proffessional_flaged else 'Active' }}
+                                    </span>
+                                </div>
+                                
+
+                                <div class="flag-section mb-4">
+                                    <h5 class="border-bottom pb-2 mb-3">Account Status</h5>
+                                    <form method="post" action="/dashboard">
+                                        <input type="hidden" name="form_type" value="flag_proffessional">
+                                        <input type="hidden" name="proffessional_id" value="{{ prof.proffessional_id }}">
+                                        <div class="form-check form-switch">
+                                            {% if prof.proffessional_flaged %}
+                                                <input class="form-check-input" type="checkbox" role="switch" 
+                                                id="flagSwitch_{{prof.proffessional_id}}" name="flag_status" value='False'
+                                                {% if prof.proffessional_flaged %}checked{% endif %}>
+                                            {% else %}
+                                                <input class="form-check-input" type="checkbox" role="switch" 
+                                                id="flagSwitch_{{prof.proffessional_id}}" name="flag_status" value='True'
+                                                {% if prof.proffessional_flaged %}checked{% endif %}>
+                                            {% endif %}
+                                            <label class="form-check-label" for="flagSwitch_{{prof.proffessional_id}}">
+                                                Flag Account
+                                            </label>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning btn-sm mt-2">Update Status</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <form method="post" action="/dashboard">
+                                <input type="hidden" name="form_type" value="delete_proffessional">
+                                <input type="hidden" name="proffessional_id" value="{{ prof.proffessional_id }}">
+                                <button type="submit" class="btn btn-danger">Delete Proffessional</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function changeSearchType(value,type) {
+    document.getElementById('searchType').textContent = type;
+    document.getElementById('searchTypeInput').value = value;
+    const searchInput = document.getElementById('searchInput');
+    
+    switch(value) {
+
+    case 'location':
+        searchInput.placeholder = "Enter location...";
+        searchInput.type = "text";
+        break;
+    case 'pincode':
+        searchInput.placeholder = "Enter Pin Code...";
+        searchInput.type = "number";
+        break;
+    case 'proffessional_company_name':
+        searchInput.placeholder = "Enter Company Name...";
+        searchInput.type = "text";
+        break;
+    case 'service_type':
+        searchInput.placeholder = "Enter Service Type...";
+        searchInput.type = "text";
+        break;
+    }
+}
+</script>
+
+{% endblock %}

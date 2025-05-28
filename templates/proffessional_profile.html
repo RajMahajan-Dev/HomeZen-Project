@@ -1,0 +1,139 @@
+{% extends 'index1.html' %}
+{% block style %}
+<style>
+    .profile-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+    
+    .profile-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .profile-photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto;
+        border: 3px solid #fff;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    
+    .profile-form {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .logout-btn {
+        position: fixed;
+        top: 70px;
+        right: 50px;
+        z-index: 1000;
+        padding: 10px 30px;
+        border-radius: 8px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: #c82333;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}
+
+{% block body1 %}
+
+<a href="/logout" class="btn logout-btn">
+     Logout
+</a>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <img src="{{ proffessional.proffessional_photo if proffessional.proffessional_photo != 'None' else '../static/default2.jpg' }}" 
+             alt="Profile Photo" class="profile-photo mb-3">
+        <h2>Professional Profile</h2>
+    </div>
+
+    <form class="profile-form" method="post" action="/profile" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label id="Pemail" class="form-label">Email</label>
+                <input type="email" class="form-control" name="Pemail" 
+                       value="{{ proffessional.proffessional_email }}" required>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label id="Pcompany_name" class="form-label">Company Name</label>
+                <input type="text" class="form-control" name="Pcompany_name" 
+                       value="{{ proffessional.proffessional_company_name if proffessional.proffessional_company_name != 'None' else '' }}" required>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label id="Pdescription" class="form-label">Description</label>
+            <textarea class="form-control" name="Pdescription" rows="4" required>{{ proffessional.proffessional_description if proffessional.proffessional_description != 'None' else '' }}</textarea>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label id="PService_type" class="form-label">Service Type</label>
+                <select class="form-select" name="PService_type" required>
+                    <option value="">Select service type...</option>
+                    <option value="Home Salon" {% if proffessional.proffessional_Service_type == 'Home Salon' %}selected{% endif %}>Home Salon</option>
+                    <option value="Home Cleaning" {% if proffessional.proffessional_Service_type == 'Home Cleaning' %}selected{% endif %}>Home Cleaning</option>
+                    <option value="Home Repair" {% if proffessional.proffessional_Service_type == 'Home Repair' %}selected{% endif %}>Home Repair</option>
+                    <option value="Home Cooking" {% if proffessional.proffessional_Service_type == 'Home Cooking' %}selected{% endif %}>Home Cooking</option>
+                    <option value="Home Tutor" {% if proffessional.proffessional_Service_type == 'Home Tutor' %}selected{% endif %}>Home Tutor</option>
+                    <option value="Home Gardening" {% if proffessional.proffessional_Service_type == 'Home Gardening' %}selected{% endif %}>Home Gardening</option>
+                    <option value="Home Security" {% if proffessional.proffessional_Service_type == 'Home Security' %}selected{% endif %}>Home Security</option>
+                    <option value="Home Automation" {% if proffessional.proffessional_Service_type == 'Home Automation' %}selected{% endif %}>Home Automation</option>
+                    <option value="Home Laundry" {% if proffessional.proffessional_Service_type == 'Home Laundry' %}selected{% endif %}>Home Laundry</option>
+                </select>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label id="Pyoe" class="form-label">Years of Experience</label>
+                <input type="number" class="form-control" name="Pyoe" 
+                       value="{{ proffessional.proffessional_years_of_experience//1 if proffessional.proffessional_years_of_experience != 0 }}" min="0" required>
+            </div>
+        </div>
+
+        <div ckass="row">
+            <div class="col-md-6 mb-3">
+                <label id="Plocation" class="form-label">Location</label>
+                <input type="text" class="form-control" name="Plocation" 
+                       value="{{ proffessional.proffessional_location if proffessional.proffessional_location != 'None' else '' }}" required>
+            </div>  
+            <div class="col-md-6 mb-3">
+                <label id="Ppincode" class="form-label">PinCode</label>
+                <input type="text" class="form-control" name="Ppincode" 
+                       value="{{ proffessional.proffessional_pincode if proffessional.proffessional_pincode != None else '' }}" required>
+            </div>
+        </div>
+        
+
+        <div class="mb-4">
+            <label id="Pphoto" class="form-label">Update Profile Photo</label>
+            <input type="file" class="form-control" name="Pphoto" accept="image/*">
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary px-5">Update Profile</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,284 @@
+{% extends 'index.html' %}
+{% block style %}
+<style>
+    .F {
+        color: blue;
+    }
+    .head {
+        height: 30vh;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    .sig {
+        padding: 0%;
+        margin-top: 1vw;
+        margin-left: 1vw;
+    }
+    img {
+        object-fit: cover;
+        width: 200px;
+        height: 150px;
+    }
+    .sig1 {
+        border: 3px solid rgb(250, 250, 250);
+        background-color: rgba(245, 197, 134, 0.396);
+        border-radius:10px;
+        margin: 1.5vw;
+        margin-bottom: 2vw;
+        box-shadow: 0px 10px 10px 0px rgb(150, 138, 138);
+    }
+    h1 {
+        margin: 0%;
+        margin-bottom: 1vh;
+        color: blueviolet;
+    }
+    h2 {
+        color: rgb(0, 0, 0);
+        font-size: 40px;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    div.card {
+        margin: 1vw;
+        display: inline-block;
+    }
+    .scroll-container {
+        position: absolute;
+        top: 275px;
+        height: 48vh;
+        width: 100%;
+        overflow: hidden;
+    }
+    .scroll-cards {
+        display: flex;
+        flex-direction: row;
+        gap: 25px;
+        width: 190%;
+        animation: autoScroll 90s linear infinite;
+    }
+
+    .scroll-card {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(8px);
+        border-radius: 15px;
+        padding: 15px;
+        margin: 10px;
+        height: 45vh;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+    .scroll-card:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.3);
+    }
+    @keyframes autoScroll {
+        0% { transform: translateX(-80%); }   
+        100% { transform: translateX(80%); }
+    }
+
+    .scroll-cards:hover {
+        animation-play-state: running;
+    }
+    
+    .flagged-row {
+        background-color: rgba(255, 0, 0, 0.1) !important; /* Light red with !important to override bootstrap */
+        border-left: 4px solid #dc3545; /* Red border on left */
+    }
+
+    .table-striped > tbody > tr.flagged-row:nth-of-type(odd) {
+        background-color: rgba(255, 0, 0, 0.15) !important; /* Slightly darker for striped effect */
+    }
+
+    .flagged-row td {
+        color: #dc3545; /* Red text */
+    }
+</style>
+{% endblock %}
+
+{% block body1 %}
+<div class="col-2 head">
+    <div class="container col d-inline sig1">
+        <div class="row sig">
+            <div class="col-md-12">
+                <h1 class="lora" style="font-size:30px">Your Green Contribution Total</h1>
+                <h2 style="display: flex; justify-content: center;">
+                {% if ordered == 0 %}
+                    <h4 style="color: rgb(25, 226, 32); font-size: 15px;">Place You First Order Now.To Plant tree on your name</h4>
+                {% else %}
+                    {{count}}
+                {% endif %}
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="container col d-inline sig1" >
+        <div class="row sig">
+            <div class="col-md-12">
+                <h1 class="lora" style="font-size:30px">Your Rank on Our Platform</h1>
+                <h2 style="display: flex; justify-content: center;">
+                    {{Rank_No}}
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="scroll-container">
+    <div class="scroll-cards">
+        <div class="scroll-card">
+            <img src="..\static\Salon.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Home Salon</h5>
+              <p class="card-text">Get beauty and grooming services at home by experienced professionals, including facials, haircuts, and spa treatments, tailored to your convenience.</p>
+            </div>
+          </div>
+    
+          <div class="scroll-card" >
+            <img src="..\static\Cook.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Cooking</h5>
+              <p class="card-text">Hire expert chefs to cook personalized, nutritious, and delicious meals in your kitchen, catering to your specific dietary preferences.</p>
+            </div>
+          </div>
+    
+          <div class="scroll-card" >
+            <img src="..\static\Clean.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Cleaning</h5>
+              <p class="card-text">Comprehensive cleaning solutions for your home, covering dusting, mopping, and sanitization, ensuring a spotless and healthy living space.</p>
+            </div>
+        </div>
+    
+        <div class="scroll-card" >
+            <img src="..\static\security.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Home Security</h5>
+              <p class="card-text">State-of-the-art home security systems, including CCTV installation, alarm setup, and monitoring services, to keep your family safe.</p>
+            </div>
+          </div>
+    
+          <div class="scroll-card" >
+            <img src="..\static\garden.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Gardening</h5>
+              <p class="card-text">Professional gardening services to maintain and beautify your plants, including planting, trimming, and landscaping for a vibrant green space.</p>
+            </div>
+          </div>
+    
+          <div class="scroll-card" >
+            <img src="..\static\laundry.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Home Laundry</h5>
+              <p class="card-text">Convenient and affordable laundry services, including washing, ironing, and dry cleaning, delivered right to your doorstep.</p>
+            </div>
+          </div>
+    
+          <div class="scroll-card" >
+            <img src="..\static\tutor.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Home Tutor</h5>
+              <p class="card-text">Quality tutoring services at home for all subjects and grades, focusing on personalized attention and academic excellence.</p>
+            </div>
+          </div>
+    
+          <div class="scroll-card" >
+            <img src="..\static\repair.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Home Repair</h5>
+              <p class="card-text">Reliable repair services for plumbing, electrical issues, furniture, and more, handled by skilled technicians for quick and hassle-free solutions.</p>
+            </div>
+          </div>
+    
+          <div class="scroll-card" >
+            <img src="..\static\automation.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Home Automation</h5>
+              <p class="card-text">Transform your house with smart automation systems, integrating lighting, appliances, and security controls for a futuristic living experience.</p>
+            </div>
+          </div>
+    </div>
+</div>
+
+
+<div class="container" style="margin: 2vh 4vw; position: absolute; top: 85vh; left: 2.5%;">
+    <h3>My Orders</h3>
+    <div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th id="CO" scope="col">Order ID</th>
+                    <th id="CO" scope="col">Provider</th>
+                    <th id="CO" scope="col">Order Name</th>
+                    <th id="CO" scope="col">Order Date</th>
+                    <th id="CO" scope="col">Order Status</th>
+                    <th id="CO" scope="col">Buttons</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders_all %}
+                <tr class="{{ 'flagged-row' if order.order_flaged else '' }}">
+                    <th scope="row">#{{order.order_id}}</th>
+                    <td>{{order.proffessional_company_name}}</td>
+                    <td>{{order.order_name}}</td>
+                    <td>{{order.order_date_created.strftime('%Y-%m-%d')}}</td>
+                    <td>{{order.order_status}}</td>
+                    {% if order.order_status == "Accepted" %}
+                    <td>
+                        <form method="post" action="/dashboard">
+                            <input type="hidden" name="form_type" value="Completed">
+                            <input type="hidden" name="order_id" value="{{order.order_id}}">
+                            <button {{ 'disabled' if order.order_flaged else '' }} type="submit" class="btn btn-success">Close it?</button>
+                        </form>
+                    </td>
+                    {% elif order.order_status == "Completed" %}
+                        {% if order.review_rating == None %}
+                        <td>
+                            <button {{ 'disabled' if order.order_flaged else '' }} type="button" data-bs-toggle="modal" data-bs-target="#modal_{{order.order_id}}" class="btn btn-warning">Review it?</button>
+                        </td>
+                        {% else %}
+                        <td>
+                            <h6 style="color: rgb(117, 243, 43);">Done</h6>
+                        </td>
+                        {% endif %}
+                    {% elif order.order_status == "Not Accepted" %}
+                    <td>
+                        <h6 style="color: cornflowerblue;">In Waiting</h6>
+                    </td>
+                    {% endif %}
+
+                    <div class="modal fade" id="modal_{{order.order_id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Payment Gateway</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <form method="post" action="/dashboard">
+                                <input type="hidden" name="form_type" value="Review">
+                                <input type="hidden" name="order_id" value="{{order.order_id}}">
+                              <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="rating" class="form-label">Rating</label>
+                                    <input type="number" name="rating" id="rating" class="form-control" min="1" max="5"  placeholder="Out Of 5" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="comment" class="form-label">Comment</label>
+                                    <textarea name="comment" id="comment" class="form-control" rows="2"></textarea>
+                                </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-success">Post Review</button>
+                              </div>
+                              </form>
+                            </div>
+                          </div>
+                      </div>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

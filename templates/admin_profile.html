@@ -1,0 +1,72 @@
+{% extends 'index3.html' %}
+{% block style %}
+<style>
+    .profile-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+    
+    .profile-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    
+    .profile-form {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .logout-btn {
+        position: fixed;
+        top: 70px;
+        right: 50px;
+        z-index: 1000;
+        padding: 10px 30px;
+        border-radius: 8px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: #c82333;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}
+
+{% block body1 %}
+
+<a href="/logout" class="btn logout-btn">
+     Logout
+</a>
+
+<div class="profile-container">
+<div class="profile-header profile-form">
+    <div class="col-md-6 mb-3">
+        <label id="Aemail" class="form-label">Email</label>
+        <input type="email" class="form-control" name="Aemail" 
+               value="{{ user.user_email }}" required>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label id="Aname" class="form-label">Name</label>
+        <input type="text" class="form-control" name="Aname" 
+               value="{{ user.user_name }}" required> 
+    </div>
+</div>
+</div>
+{% endblock %}
