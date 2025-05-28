@@ -89,4 +89,4 @@ I'm Raj Mahajan, a passionate tech innovator with a strong foundation in Automat
 
 ✅ Enhanced deployment using production-ready servers
 
-💡 If this project sparks your interest, feel free to ⭐ star, fork, or contribute. Let's create tech that serves the community better, together! 🌱
+**💡 If this project sparks your interest, feel free to ⭐ star, fork, or contribute. Let's create tech that serves the community better, together! 🌱**
