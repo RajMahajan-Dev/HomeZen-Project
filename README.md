@@ -80,7 +80,7 @@ Profile Management	/profile	GET, POST
 I'm Raj Mahajan, a passionate tech innovator with a strong foundation in Automation, Robotics, and Data Science. I love building solutions that blend real-world needs with cutting-edge technologies. My projects reflect my drive for innovation, clean design, and scalable architecture.
 
 📧 rajmahajan2151.rm@gmail.com
-🔗 LinkedIn
+🔗 [LinkedIn](https://linkedin.com/in/rajmahajan2151)
 
 ## 🛠️ Future Enhancements
 ✅ Payment gateway integration
